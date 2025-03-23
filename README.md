@@ -1,17 +1,14 @@
-# 🚀 Auto-Scaling Flask Microservice: Local VM to GCP  
+# Auto-Scaling Flask Application: Local VM to GCP  
 
-## 📌 Project Overview  
+## Project Overview  
 This project demonstrates **auto-scaling** of a **Flask-based microservice** from a local Virtual Machine (VM) to **Google Cloud Platform (GCP)**.  
 The system **monitors CPU usage**, and when it exceeds **75%**, it automatically **deploys a new GCP VM** running the same application.  
 
-## 🏗 Architecture  
+## Architecture  
 - A **Flask microservice** running on a **local VM**.
 - The **monitoring script** checks CPU usage every 10 seconds.
 - When CPU usage **exceeds 75%**, a **new GCP VM is created**.
 - The new VM is **automatically configured** and starts handling requests.
-
-### 📜 Architecture Diagram  
-![Auto-Scaling Diagram](diagrams/autoscaling.png)  
 
 ## 📂 Project Structure  
 ```
@@ -27,29 +24,29 @@ local-vm-autoscaling/
 ```
 
 ## ⚙️ Installation & Setup  
-### **1️⃣ Clone the Repository**  
+### **1️. Clone the Repository**  
 ```bash
 git clone https://github.com/YOUR_GITHUB_USERNAME/AutoScaling-VM-to-GCP.git
 cd AutoScaling-VM-to-GCP
 ```
 
-### **2️⃣ Install Dependencies**  
+### **2️. Install Dependencies**  
 ```bash
 pip install -r src/requirements.txt
 ```
 
-### **3️⃣ Run the Flask Application**  
+### **3️. Run the Flask Application**  
 ```bash
 python src/app.py
 ```
 Open **http://localhost:5000** in a browser.  
 
 ## 📜 Auto-Scaling Mechanism  
-### **1️⃣ Monitor CPU Usage**
+### **1️. Monitor CPU Usage**
 - The `monitor_resources.sh` script checks CPU usage **every 10 seconds**.
 - If CPU usage **exceeds 75%**, it triggers **GCP auto-scaling**.
 
-### **2️⃣ Create New VM on GCP**
+### **2️. Create New VM on GCP**
 The script executes:
 ```bash
 gcloud compute instances create scaled-vm-$(date +%s)     --zone=us-central1-b     --machine-type=n1-standard-1     --image-family=ubuntu-2204-lts     --image-project=ubuntu-os-cloud     --metadata=startup-script='#! /bin/bash
@@ -85,25 +82,25 @@ gcloud compute instances create scaled-vm-$(date +%s)     --zone=us-central1-b  
 ```
 This **deploys the same Flask microservice** on a **new VM**.
 
-### **3️⃣ Redirect Traffic to GCP VM**
+### **3️. Redirect Traffic to GCP VM**
 - Once the new VM is created, users can **access it via the external IP**.
 - The **service remains available**, even under heavy load.
 
 ## Testing the Auto-Scaling Mechanism  
-### **1️⃣ Simulate High CPU Load**
+### **1️. Simulate High CPU Load**
 Run:
 ```bash
 while true; do curl http://localhost:5000; done
 ```
 This will keep sending requests, increasing CPU usage.  
 
-### **2️⃣ Check if a New VM is Created**
+### **2️. Check if a New VM is Created**
 ```bash
 gcloud compute instances list
 ```
 A new instance (e.g., `scaled-vm-123456789`) should appear.
 
-### **3️⃣ Verify Flask Running on GCP VM**
+### **3️. Verify Flask Running on GCP VM**
 ```bash
 gcloud compute ssh scaled-vm-XXXXX --zone=asia-south1-b
 sudo ss -tulnp | grep LISTEN
